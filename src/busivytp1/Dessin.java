@@ -59,7 +59,7 @@ public class Dessin extends javax.swing.JComponent {
             } else {
                 g.setColor(Color.GRAY);
             }
-            //g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
+            g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
         }
 
         // on vérifie s il y a release avant de normaliser 
@@ -74,7 +74,7 @@ public class Dessin extends javax.swing.JComponent {
                     g.setColor(Color.BLUE);
                 }
                 stroke.normalize();
-                g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
+                //g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
             }
         }
     }

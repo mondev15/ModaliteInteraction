@@ -89,7 +89,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 }
             });
         } catch (IvyException ex) {
-            Logger.getLogger(IHMIVY.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -244,7 +244,7 @@ public class IHMgesture extends javax.swing.JFrame {
                         bus.sendMsg("Palette:CreerRectangle x=50 y=50 couleurFond=BLACK");
                         //créer la forme et l'enregistrer dans le dictionnaire
                     } catch (IvyException ex) {
-                        Logger.getLogger(IHMIVY.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 break;
@@ -252,7 +252,7 @@ public class IHMgesture extends javax.swing.JFrame {
                     try {
                         bus.sendMsg("Palette:CreerEllipse x=50 y=50 couleurFond=BLACK");
                     } catch (IvyException ex) {
-                        Logger.getLogger(IHMIVY.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
