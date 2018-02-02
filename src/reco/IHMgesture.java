@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package busivytp1;
+package reco;
 
+import structures.Stroke;
+import structures.Dico;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
@@ -103,7 +105,7 @@ public class IHMgesture extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup4 = new javax.swing.ButtonGroup();
-        dessin = new busivytp1.Dessin();
+        dessin = new reco.Dessin();
         jButtonAjouterGeste = new javax.swing.JButton();
         jTextFieldForme = new javax.swing.JTextField();
         jRadioButtonEnregistrement = new javax.swing.JRadioButton();
@@ -306,7 +308,7 @@ public class IHMgesture extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup4;
-    private busivytp1.Dessin dessin;
+    private reco.Dessin dessin;
     private javax.swing.JButton jButtonAjouterGeste;
     private javax.swing.JButton jButtonReconnaitre;
     private javax.swing.JRadioButton jRadioButtonEnregistrement;

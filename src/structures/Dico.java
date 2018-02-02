@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package busivytp1;
+package structures;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
