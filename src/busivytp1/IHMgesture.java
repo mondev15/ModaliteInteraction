@@ -45,7 +45,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     try {
-                        dessin.getStroke().init();
+                        dessin.setStroke(new Stroke());
                         dessin.setFinished(false);
                         //System.out.println(" MousePressed x= " + args[0] + " y= " + args[1]);
                         int x = Integer.parseInt(args[0]);
@@ -61,11 +61,11 @@ public class IHMgesture extends javax.swing.JFrame {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     //System.out.println(" MouseReleased x= " + args[0] + " y= " + args[1]);
+                    try{
                     dessin.setFinished(true);
                     int x = Integer.parseInt(args[0]);
-                    int y = Integer.parseInt(args[1]);
-                    try {
-                        dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
+                    int y = Integer.parseInt(args[1]);                    
+                    dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
                     } catch (CloneNotSupportedException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -230,11 +230,11 @@ public class IHMgesture extends javax.swing.JFrame {
 
     private void jButtonReconnaitreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReconnaitreActionPerformed
         // TODO add your handling code here:
+        dico.saveToFile();
         Stroke s;
         try {
             //---reconnaissance de la forme
             s = dessin.getStroke();
-            dico.saveToFile();
             forme = dico.recognize(s);
             //---dessinner la bonne forme reconnue sur la palette 
             switch (forme) {
