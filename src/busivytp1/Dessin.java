@@ -9,10 +9,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-//Etape 1 : affichage 
-//Etape 2 : normalisation
-//Etape 3 : enregistrement (dans un fichier texte)
-//Etape 4 : reconnaissance
 /**
  *
  * @author mundial
@@ -28,14 +24,13 @@ public class Dessin extends javax.swing.JComponent {
         finished = false;
     }
 
-    public  void setStroke(Stroke s){
+    public void setStroke(Stroke s) {
         this.stroke = s;
     }
-    
+
     public Stroke getStroke() throws CloneNotSupportedException {
         return stroke.clone();
     }
-    
 
     public Boolean getFinished() {
         return finished;
@@ -64,17 +59,10 @@ public class Dessin extends javax.swing.JComponent {
 
         // on vérifie s il y a release avant de normaliser 
         if (finished) {
+            g.setColor(Color.BLUE);
             for (int i = 0; i < stroke.size(); i++) {
-                // on saisit la couleur en fonction de la position du point
-                if (i == 0) {
-                    g.setColor(Color.GREEN);
-                } else if (i == (stroke.size() - 1)) {
-                    g.setColor(Color.RED);
-                } else {
-                    g.setColor(Color.BLUE);
-                }
                 stroke.normalize();
-                //g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
+                g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
             }
         }
     }
