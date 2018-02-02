@@ -5,7 +5,7 @@
  */
 package reco;
 
-import structures.Forme;
+import structures.TypeForme;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyApplicationListener;
 import fr.dgac.ivy.IvyClient;
@@ -17,6 +17,7 @@ import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
+import structures.Couleur;
 
 
 /**
@@ -31,10 +32,9 @@ public class Automate {
     enum State{INIT, OPTION, CLIC, POSITION};
     private State state;
     
-    private Forme forme;
+    private TypeForme forme;
     
-    enum COULEUR{ROUGE, VERT, BLEU, NOIR};
-    private COULEUR couleur;
+    private Couleur couleur;
     
     enum VOCALPOS{ICI, LA, ACETTEPOSITION};
     private Point2D position;
@@ -78,8 +78,8 @@ public class Automate {
     
     public Automate(){
         state = State.INIT;
-        couleur = COULEUR.ROUGE;
-        forme = Forme.RECTANGLE;
+        couleur = Couleur.ROUGE;
+        forme = TypeForme.RECTANGLE;
         position = new Point2D.Double(0,0);
         IvyApplicationListener listener = null;
         busIvy = new Ivy("RecoVocale","Bonjour 1",listener);
@@ -115,15 +115,15 @@ public class Automate {
     */
     
     /* CONVERTIR LE NOM DE LA FORME EN PARAMETRE ?*/
-    public void CreerForme(Forme f){
+    public void CreerForme(TypeForme f){
         switch(state){
             case INIT:
                 switch(f){
                     case RECTANGLE:
-                        this.forme = Forme.RECTANGLE;
+                        this.forme = TypeForme.RECTANGLE;
                         break;
                     case ELLIPSE:
-                        this.forme = Forme.ELLIPSE;
+                        this.forme = TypeForme.ELLIPSE;
                         break;
                 }
 
@@ -142,19 +142,19 @@ public class Automate {
                             if(tauxReco >79 ){
                                 switch(args[0]){
                                     case "rouge":
-                                        couleur = COULEUR.ROUGE;
+                                        couleur = Couleur.ROUGE;
                                         System.out.println("Rouge");
                                         break;
                                     case "bleu":
-                                        couleur = COULEUR.BLEU;
+                                        couleur = Couleur.BLEU;
                                         System.out.println("Bleu");
                                         break;
                                     case "vert":
-                                        couleur = COULEUR.VERT;
+                                        couleur = Couleur.VERT;
                                         System.out.println("Vert");
                                         break;
                                     case "noir":
-                                        couleur = COULEUR.NOIR;
+                                        couleur = Couleur.NOIR;
                                         System.out.println("Noir");
                                         break;
                                 }
@@ -168,7 +168,7 @@ public class Automate {
     }
     
     
-    public void couleur(COULEUR c){
+    public void couleur(Couleur c){
         switch(state){
             case INIT:
                 //NE RIEN FAIRE
@@ -176,16 +176,16 @@ public class Automate {
             case OPTION:
                 switch(c){
                     case ROUGE:
-                        this.couleur = COULEUR.ROUGE;
+                        this.couleur = Couleur.ROUGE;
                         break;
                     case VERT:
-                        this.couleur = COULEUR.VERT;
+                        this.couleur = Couleur.VERT;
                         break;
                     case BLEU:
-                        this.couleur = COULEUR.BLEU;
+                        this.couleur = Couleur.BLEU;
                         break;
                     case NOIR:
-                        this.couleur = COULEUR.NOIR;
+                        this.couleur = Couleur.NOIR;
                         break;
                 }
                 

@@ -52,6 +52,7 @@ public class MainProject extends JComponent{
             //busIvy.sendMsg("");
             
             busIvy.bindMsg("sra5 Text=(.*) Confidence=(.*)", new IvyMessageListener(){
+                
                 @Override
                 public void receive(IvyClient client, String[] args) {  
                    //for(int i = 0; i < args.length; i++){
