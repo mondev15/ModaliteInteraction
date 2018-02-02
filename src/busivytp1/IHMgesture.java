@@ -61,11 +61,11 @@ public class IHMgesture extends javax.swing.JFrame {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     //System.out.println(" MouseReleased x= " + args[0] + " y= " + args[1]);
-                    try{
-                    dessin.setFinished(true);
-                    int x = Integer.parseInt(args[0]);
-                    int y = Integer.parseInt(args[1]);                    
-                    dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
+                    try {
+                        dessin.setFinished(true);
+                        int x = Integer.parseInt(args[0]);
+                        int y = Integer.parseInt(args[1]);
+                        dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
                     } catch (CloneNotSupportedException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -230,7 +230,9 @@ public class IHMgesture extends javax.swing.JFrame {
 
     private void jButtonReconnaitreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReconnaitreActionPerformed
         // TODO add your handling code here:
-        dico.saveToFile();
+        if(dico.getStrokeMap().size() !=0){
+            dico.saveToFile();
+        }
         Stroke s;
         try {
             //---reconnaissance de la forme
