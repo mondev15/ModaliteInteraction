@@ -42,7 +42,7 @@ public class MainProject extends JComponent{
         
          IvyApplicationListener listener = null;
             
-            busIvy = new Ivy("myAGent1","Bonjour 1",listener);
+            busIvy = new Ivy("RecoVocale","Bonjour 1",listener);
             
         try {
             busIvy.start("127.255.255.255:2010");
