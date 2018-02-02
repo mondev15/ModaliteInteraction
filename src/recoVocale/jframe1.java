@@ -26,6 +26,7 @@ public class jframe1 extends javax.swing.JFrame {
         initComponents();
     }
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,7 +36,7 @@ public class jframe1 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainProject1 = new interaction.vocale.MainProject();
+        mainProject2 = new recoVocale.MainProject();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,11 +44,15 @@ public class jframe1 extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainProject1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(mainProject2, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainProject1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(mainProject2, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -89,7 +94,7 @@ public class jframe1 extends javax.swing.JFrame {
                 new jframe1().setVisible(true);
                 MainProject graphique = new MainProject();
 
-                Path currentRelativePath = Paths.get("");
+                /*Path currentRelativePath = Paths.get("");
                 String s = currentRelativePath.toAbsolutePath().toString();
                 String CHEMIN = s + "\\sra5\\";
 
@@ -110,14 +115,19 @@ public class jframe1 extends javax.swing.JFrame {
 
                 } catch (IOException ex) {
                     Logger.getLogger(MainProject.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
                         graphique.setPreferredSize(new Dimension(500, 500));
                         graphique.repaint();
                     }
+
+            
                 });
+            
+        
+                
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private interaction.vocale.MainProject mainProject1;
+    private recoVocale.MainProject mainProject2;
     // End of variables declaration//GEN-END:variables
 }
