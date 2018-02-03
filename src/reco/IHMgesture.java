@@ -37,6 +37,19 @@ public class IHMgesture extends javax.swing.JFrame {
 
         //---dico
         dico = new Dico();
+        //
+        if (dico.getDicoExists()) {
+            jRadioButtonReconnaissance.setSelected(true);
+            jButtonReconnaitre.setVisible(true);
+            jButtonAjouterGeste.setVisible(false);
+            jTextFieldForme.setVisible(false);
+
+        } else {
+            jButtonAjouterGeste.setVisible(true);
+            jTextFieldForme.setVisible(true);
+            jButtonReconnaitre.setVisible(false);
+            jRadioButtonEnregistrement.setSelected(true);
+        }
         //---bus
         bus = new Ivy("gesture", " ", null);
         palette = new PaletteGraphique("127.255.255.255:2010", 250, 250, 250, 250);
