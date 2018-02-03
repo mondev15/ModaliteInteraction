@@ -27,12 +27,12 @@ public class Dico implements Serializable {
 
     private Map<String, Stroke> strokeMap;
     File dicofile;
+    Boolean dicoExists = false;
 
     public Dico() {
         strokeMap = new HashMap<String, Stroke>();
        File currentDir = new File(System.getProperty("user.dir"));
         String[] fileList = currentDir.list();
-        Boolean dicoExists = false;
         // on vérifie si le fichier dico existe
         for (int i = 0; i < fileList.length; i++) {
             if (fileList[i].contains("dico")) {
@@ -148,6 +148,10 @@ public class Dico implements Serializable {
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
+    }
+    
+    public boolean  getDicoExists(){
+      return dicoExists; 
     }
 
 
