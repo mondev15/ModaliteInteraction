@@ -43,9 +43,11 @@ public class Dico implements Serializable {
         // si le fichier dico n'existe pas, il le crée
         if (dicoExists == false) {
             dicofile = new File("dico");
+            System.out.println(" file dico doesn't exist, new file dico is created");
         } 
         else{
-        dicofile = new File(currentDir+"\\dico");
+           dicofile = new File(currentDir+"\\dico");
+           System.out.println("file dico exists, no need to create it");
         }
     }
 
@@ -65,7 +67,7 @@ public class Dico implements Serializable {
         if (dicofile.length() > 0) {
             loadFile();
         }
-        String forme = "Geste non reconnu";
+        String geste = "Geste non reconnu";
         double min = Double.MAX_VALUE;
         double dist = 0.0;
 
@@ -81,18 +83,28 @@ public class Dico implements Serializable {
             System.out.println(" dist " + s + "  :" + dist);
             if (dist < min) {
                 min = dist;
-                forme = entry.getKey();
+                geste = entry.getKey();
             }
         }
-        if (forme.equals("Rectangle")) {
-            forme = "rectangle";
+        
+        switch(geste){
+            case "Rectangle":
+                geste ="rectangle";
+                break;
+            case "Ellipse":
+                geste ="ellipse";
+                break;
+            case "Supprimer":
+                geste ="supprimer";
+                break;
+            case "Deplacer":
+                geste ="deplacer";
+                break;           
         }
-        if (forme.equals("Ellipse")) {
-            forme = "ellipse";
-        }
-        System.out.println("Forme reconnue : " + forme);
+        
+        System.out.println("geste reconnu : " + geste);
 
-        return forme;
+        return geste;
     }
 
     public void saveToFile() {
@@ -137,5 +149,6 @@ public class Dico implements Serializable {
             throw new RuntimeException(ioe);
         }
     }
-    
+
+
 }

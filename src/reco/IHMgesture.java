@@ -26,7 +26,7 @@ public class IHMgesture extends javax.swing.JFrame {
     Ivy bus;
     PaletteGraphique palette;
     Dico dico;
-    String forme = "";
+    String geste = "";
 
     public IHMgesture() throws IvyException {
         initComponents();
@@ -39,7 +39,7 @@ public class IHMgesture extends javax.swing.JFrame {
         dico = new Dico();
         //---bus
         bus = new Ivy("gesture", " ", null);
-        palette = new PaletteGraphique("127.255.255.255:2010", 250, 250,500, 500);
+        palette = new PaletteGraphique("127.255.255.255:2010", 250, 250, 250, 250);
         try {
             bus.start("127.255.255.255:2010");
 
@@ -152,42 +152,42 @@ public class IHMgesture extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jRadioButtonEnregistrement)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButtonReconnaissance)
-                        .addGap(28, 28, 28))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonReconnaitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAjouterGeste, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jRadioButtonEnregistrement)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jRadioButtonReconnaissance)
+                                                .addGap(28, 28, 28))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jButtonReconnaitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(jButtonAjouterGeste, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonEnregistrement)
-                    .addComponent(jRadioButtonReconnaissance))
-                .addGap(18, 18, 18)
-                .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonAjouterGeste))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonReconnaitre))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jRadioButtonEnregistrement)
+                                        .addComponent(jRadioButtonReconnaissance))
+                                .addGap(18, 18, 18)
+                                .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButtonAjouterGeste))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonReconnaitre))
         );
 
         pack();
@@ -197,12 +197,11 @@ public class IHMgesture extends javax.swing.JFrame {
         // TODO add your handling code here:
         //reconnait le rectangle ou ellipse uniquement
 
-        if (jTextFieldForme.getText().equals("Rectangle") || jTextFieldForme.getText().equals("Ellipse")) {
+        if (jTextFieldForme.getText().equals("Rectangle") || jTextFieldForme.getText().equals("Ellipse")
+                || jTextFieldForme.getText().equals("Supprimer") || jTextFieldForme.getText().equals("Deplacer")) {
             try {
-                // comment reconnaitre une forme
                 dico.addStroke(jTextFieldForme.getText(), dessin.getStroke());
-                System.out.println("dico size : " + dico.getStrokeMap().size());
-                System.out.println("name : " + jTextFieldForme.getText());
+                System.out.println("added to dico :"  + jTextFieldForme.getText());
                 jTextFieldForme.setText("");
                 dessin.setStroke(new Stroke());
                 dessin.repaint();
@@ -233,16 +232,16 @@ public class IHMgesture extends javax.swing.JFrame {
 
     private void jButtonReconnaitreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReconnaitreActionPerformed
         // TODO add your handling code here:
-        if(dico.getStrokeMap().size() !=0){
+        if (dico.getStrokeMap().size() != 0) {
             dico.saveToFile();
         }
         Stroke s;
         try {
             //---reconnaissance de la forme
             s = dessin.getStroke();
-            forme = dico.recognize(s);
-            //---dessinner la bonne forme reconnue sur la palette 
-            switch (forme) {
+            geste = dico.recognize(s);
+
+            switch (geste) {
                 case "rectangle": {
                     try {
                         bus.sendMsg("Rectangle");
@@ -250,6 +249,24 @@ public class IHMgesture extends javax.swing.JFrame {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                break;
+                case "supprimer": {
+                    try {
+                        bus.sendMsg("Supprimer");
+                    } catch (IvyException ex) {
+                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                break;
+                case "deplacer": {
+                    try {
+                        bus.sendMsg("Deplacer");
+                    } catch (IvyException ex) {
+                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
                 break;
                 case "ellipse": {
                     try {
