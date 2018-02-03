@@ -11,13 +11,19 @@ import fr.dgac.ivy.IvyApplicationListener;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
 import fr.dgac.ivy.IvyMessageListener;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
+import structures.Actions;
 import structures.Couleur;
+import structures.Creation;
+import structures.LanguageVocal;
+import structures.Suppression;
+import structures.TypeActions;
 
 
 /**
@@ -33,17 +39,20 @@ public class Automate {
     private State state;
     
     private TypeForme forme;
+    private Actions action;
     
     private Couleur couleur;
     
     enum VOCALPOS{ICI, LA, ACETTEPOSITION};
     private Point2D position;
     
-    private Timer timerOption;
-    private Timer timerClicAndPosition;
+    private Timer actionTimeOut;
+    private Timer timerPointing;
     private int delayTimer = 2000;
     
+    private final int TAUXRECOMIN = 79;
     
+  
     private int _X = 20;
     private int _Y = 70;
     private int _WIDTH = 150;
@@ -52,29 +61,11 @@ public class Automate {
     private Ivy busIvy;
     
      public void genererForme(){
-        //INSERER ICI LE CODE DE GENERATION DE FORME
-        switch(forme){
-            case RECTANGLE:
-                try {
-                        //on peut précise la position (x,y) et la couleur
-                        busIvy.sendMsg("Palette:CreerRectangle x="+_X+" y="+_Y+" couleurFond="+couleur);
-                        //créer la forme et l'enregistrer dans le dictionnaire
-                    } catch (IvyException ex) {
-                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                break;
-            case ELLIPSE:
-                try {
-                        //on peut précise la position (x,y) et la couleur
-                        busIvy.sendMsg("Palette:CreerEllipse x="+_X+" y="+_Y+" couleurFond="+couleur);
-                        //créer la forme et l'enregistrer dans le dictionnaire
-                    } catch (IvyException ex) {
-                        Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                break;
-        }
+        // Creation.sendIvy
     }
     
+     
+   
     
     public Automate(){
         state = State.INIT;
@@ -82,115 +73,136 @@ public class Automate {
         forme = TypeForme.RECTANGLE;
         position = new Point2D.Double(0,0);
         IvyApplicationListener listener = null;
-        busIvy = new Ivy("RecoVocale","Bonjour 1",listener);
+        busIvy = new Ivy("FusionMultimodale","",listener);
         
+        actionTimeOut = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
+            genererForme();
+            state = State.INIT;
+        });
+        
+        timerPointing = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
+            genererForme();
+            state = State.INIT;
+        });
+        
+        actionTimeOut.stop();
+        actionTimeOut.stop();
         
         try {
             busIvy.start("127.255.255.255:2010");
+            
+            busIvy.bindMsg("gesture action=(.*)", (IvyClient client, String[] args) -> {
+                //INIT ?
+                actions(args[0]);
+            });
+            
+            
+            busIvy.bindMsg("sra5 Parsed=couleur:(.*) Confidence=(.*) NP=.*", (client, args) -> {
+                String Reco = args[1].split(",")[1];
+                int tauxReco = Integer.parseInt(Reco);
+                if( tauxReco>TAUXRECOMIN){
+                    couleur(args[0]);
+                }
+            });
+            
+            busIvy.bindMsg("Palette:Mouse(.*) x=(.*) y=(.*)", (client, args) -> {
+                if(args[0].equals("Clicked")){
+                    clic(new Point(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+                }
+            });
+            
+            
+            busIvy.bindMsg("sra5 Parsed=DesignationPosition: Confidence=(.*) NP=.*", (client, args) -> {
+                String Reco = args[1].split(",")[1];
+                int tauxReco = Integer.parseInt(Reco);
+                //APPLIQUER LA METHODE DE PARSING ICI
+                if(tauxReco>TAUXRECOMIN){
+                    Vocal(LanguageVocal.Position);
+                }
+            });
+            busIvy.bindMsg("sra5 Parsed=DesignationCouleur: Confidence=(.*) NP=.*", (client, args) -> {
+                String Reco = args[1].split(",")[1];
+                int tauxReco = Integer.parseInt(Reco);
+                if(tauxReco>TAUXRECOMIN){
+                     Vocal(LanguageVocal.Couleur);
+                }
+            });
+            busIvy.bindMsg("sra5 Parsed=DesignationForme:(.*) Confidence=(.*) NP=.*", (client, args) -> {
+                String Reco = args[1].split(",")[1];
+                int tauxReco = Integer.parseInt(Reco);
+                if(tauxReco>TAUXRECOMIN){
+                    if(args[0].equals("cet objet")){
+                        Vocal(LanguageVocal.Objet);
+                    } else if (args[0].equals("ce rectangle")){
+                        Vocal(LanguageVocal.Rectangle);
+                    } else if (args[0].equals("cette ellipse")){
+                        Vocal(LanguageVocal.Ellipse);
+                    }
+                    //A SUPPRIMER
+                    System.out.println("Designer forme : "+args[0]);
+                }
+            });
+            
         } catch (IvyException ex) {
             Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        timerOption = new javax.swing.Timer(delayTimer, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        genererForme();
-                        state = State.INIT;
-                    }
-                });
         
-        timerClicAndPosition = new javax.swing.Timer(delayTimer, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        genererForme();
-                        state = State.INIT;
-                    }
-                });
+    }
+    
+    private int parsingTauxReco(String arg){
+        String Reco = arg.split(",")[1];
+        return Integer.parseInt(Reco);
     }
     
     
     
-    /*
-    * NOTE : SEUL L'AUTOMATE DE CREATION FORME EST PRESENT POUR L'INSTANT AFIN DE TESTER
-    */
-    
-    /* CONVERTIR LE NOM DE LA FORME EN PARAMETRE ?*/
-    public void CreerForme(TypeForme f){
-        switch(state){
-            case INIT:
-                switch(f){
-                    case RECTANGLE:
-                        this.forme = TypeForme.RECTANGLE;
-                        break;
-                    case ELLIPSE:
-                        this.forme = TypeForme.ELLIPSE;
-                        break;
-                }
-
-                timerOption.start();      
-        
-                try {
-                    busIvy.bindMsg("sra5 couleur:(.*) Confidence=(.*) NP=.*", new IvyMessageListener(){
-                        @Override
-                        public void receive(IvyClient client, String[] args) {
-                            String Action = args[0];
-                            String Reco = args[1];
-
-                            Reco = Reco.split(",")[1];
-                            int tauxReco = Integer.parseInt(Reco);       
-
-                            if(tauxReco >79 ){
-                                switch(args[0]){
-                                    case "rouge":
-                                        couleur = Couleur.ROUGE;
-                                        System.out.println("Rouge");
-                                        break;
-                                    case "bleu":
-                                        couleur = Couleur.BLEU;
-                                        System.out.println("Bleu");
-                                        break;
-                                    case "vert":
-                                        couleur = Couleur.VERT;
-                                        System.out.println("Vert");
-                                        break;
-                                    case "noir":
-                                        couleur = Couleur.NOIR;
-                                        System.out.println("Noir");
-                                        break;
-                                }
-                            }
-                        }
-                    });
-                } catch (IvyException ex) {
-                    Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
-                }
+    public void actions (String arg){
+        switch(arg){
+            case "Rectangle":
+                forme = TypeForme.RECTANGLE;
+                action = new Creation(couleur.toString(), forme);
+                break;
+            case "Ellipse":
+                forme = TypeForme.ELLIPSE;
+                action = new Creation(couleur.toString(), forme);
+                break;
+            case "Deplacer":
+                //TODO
+                break;
+            case "Supprimer":
+                action = new Suppression();
+                break;
         }
+        state = State.OPTION;
+        actionTimeOut.start();
+        timerPointing.stop();  
     }
     
     
-    public void couleur(Couleur c){
+    public void couleur(String c){
         switch(state){
             case INIT:
                 //NE RIEN FAIRE
                 break;
             case OPTION:
                 switch(c){
-                    case ROUGE:
+                    case "ROUGE":
                         this.couleur = Couleur.ROUGE;
                         break;
-                    case VERT:
+                    case "VERT":
                         this.couleur = Couleur.VERT;
                         break;
-                    case BLEU:
+                    case "BLEU":
                         this.couleur = Couleur.BLEU;
                         break;
-                    case NOIR:
+                    case "NOIR":
                         this.couleur = Couleur.NOIR;
                         break;
                 }
                 
-                timerOption.stop();
-                timerOption.start();
+                actionTimeOut.stop();
+                actionTimeOut.start();
                 state = State.OPTION;
                 break;
             case POSITION:
@@ -210,13 +222,13 @@ public class Automate {
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-                timerOption.stop();
-                timerClicAndPosition.start();
+                actionTimeOut.stop();
+                timerPointing.start();
                 state = State.CLIC;
                 break;
             case POSITION:
-                timerOption.start();
-                timerClicAndPosition.stop();
+                actionTimeOut.start();
+                timerPointing.stop();
                 state = State.OPTION;
                 break;
             case CLIC:
@@ -233,12 +245,12 @@ public class Automate {
                 break;
             case OPTION:
                 if(v.equals(VOCALPOS.ICI) || v.equals(VOCALPOS.LA)||v.equals(VOCALPOS.ACETTEPOSITION)){
-                    timerOption.stop();
-                    timerClicAndPosition.start();
+                    actionTimeOut.stop();
+                    timerPointing.start();
                     state = State.POSITION;
                 }else{
-                    timerOption.start();
-                    timerClicAndPosition.stop();
+                    actionTimeOut.start();
+                    timerPointing.stop();
                     state = State.CLIC;
                 }
                 break;
@@ -247,12 +259,12 @@ public class Automate {
                 break;
             case CLIC:
                 if(v.equals(VOCALPOS.ICI) || v.equals(VOCALPOS.LA)||v.equals(VOCALPOS.ACETTEPOSITION)){
-                    timerOption.start();
-                    timerClicAndPosition.stop();
+                    actionTimeOut.start();
+                    timerPointing.stop();
                     state = State.OPTION;
                 }else{
-                    timerOption.stop();
-                    timerClicAndPosition.start();
+                    actionTimeOut.stop();
+                    timerPointing.start();
                     state = State.CLIC;
                 }
             break;
