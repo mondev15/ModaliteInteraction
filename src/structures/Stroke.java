@@ -2,21 +2,22 @@ package structures;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Stroke  implements Cloneable
+public class Stroke  implements Cloneable, Serializable 
+        
 {
 	private static final int NB_POINTS = 32;
 	private static final int SQUARE_SIZE = 100;
-	
 	ArrayList<Point2D.Double> listePoint;
 	Point2D.Double centroid;
-	
+	//
         @Override
         public Stroke clone() throws CloneNotSupportedException{
           return (Stroke) super.clone();
         }
-	
+	//
         public Stroke()
 	{
 		listePoint = new ArrayList<Point2D.Double>();
