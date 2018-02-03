@@ -5,13 +5,11 @@
  */
 package structures;
 
-import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -28,19 +26,26 @@ import java.util.logging.Logger;
 public class Dico implements Serializable {
 
     private Map<String, Stroke> strokeMap;
-    BufferedWriter bw;
-    FileWriter fw;
     File dicofile;
-    ObjectOutputStream out = null;
-    ObjectInputStream in = null;
-    
+
     public Dico() {
-        dicofile = new File("dico");
         strokeMap = new HashMap<String, Stroke>();
-        try {
-            out = new ObjectOutputStream(new FileOutputStream(dicofile));
-        } catch (IOException ex) {
-            Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
+       File currentDir = new File(System.getProperty("user.dir"));
+        String[] fileList = currentDir.list();
+        Boolean dicoExists = false;
+        // on vérifie si le fichier dico existe
+        for (int i = 0; i < fileList.length; i++) {
+            if (fileList[i].contains("dico")) {
+                dicoExists = true;
+            }
+        }
+        //
+        // si le fichier dico n'existe pas, il le crée
+        if (dicoExists == false) {
+            dicofile = new File("dico");
+        } 
+        else{
+        dicofile = new File(currentDir+"\\dico");
         }
     }
 
@@ -57,7 +62,7 @@ public class Dico implements Serializable {
     }
 
     public String recognize(Stroke myStroke) {
-        if (dicofile.length()>0){
+        if (dicofile.length() > 0) {
             loadFile();
         }
         String forme = "Geste non reconnu";
@@ -91,10 +96,17 @@ public class Dico implements Serializable {
     }
 
     public void saveToFile() {
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
         try {
+            fos =  new FileOutputStream(dicofile);
+            out = new ObjectOutputStream(fos);
             out.writeObject(strokeMap);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+        closeFile(out);
         }
     }
 
@@ -102,26 +114,18 @@ public class Dico implements Serializable {
     public void loadFile() {
         FileInputStream fis = null;
         ObjectInputStream in = null;
-        
-        if (dicofile.length() > 0) {          
-            try{
-                fis = new FileInputStream(dicofile);
-                in = new ObjectInputStream(fis);
-                try {
-                    strokeMap = (HashMap<String,Stroke>) in.readObject();
-                    //System.out.println("Map size: "+strokeMap.size());
-                    //System.out.println("Map content: "+strokeMap.entrySet());
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            catch(IOException ex){
+
+        try {
+            // on récupère le fichier existant
+            dicofile = new File (System.getProperty("user.dir")+"\\dico");
+            fis = new FileInputStream(dicofile);
+            in = new ObjectInputStream(fis);
+            strokeMap = (HashMap<String,Stroke>) in.readObject();
+        } catch (Exception ex) {
             Logger.getLogger(Dico.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            finally{
-            closeFile(in);
-            }
-            
+        }
+        finally{
+        closeFile(in);
         }
     }
 
@@ -133,4 +137,5 @@ public class Dico implements Serializable {
             throw new RuntimeException(ioe);
         }
     }
+    
 }

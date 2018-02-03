@@ -5,8 +5,6 @@
  */
 package reco;
 
-import structures.Stroke;
-import structures.Dico;
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
@@ -16,6 +14,8 @@ import java.awt.geom.Point2D;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import structures.Dico;
+import structures.Stroke;
 
 /**
  *
@@ -38,8 +38,8 @@ public class IHMgesture extends javax.swing.JFrame {
         //---dico
         dico = new Dico();
         //---bus
-        bus = new Ivy("agent2", "gesture", null);
-        palette = new PaletteGraphique("127.255.255.255:2010", 250, 250, 250, 250);
+        bus = new Ivy("gesture", " ", null);
+        palette = new PaletteGraphique("127.255.255.255:2010", 250, 250,500, 500);
         try {
             bus.start("127.255.255.255:2010");
 
@@ -63,11 +63,11 @@ public class IHMgesture extends javax.swing.JFrame {
                 @Override
                 public void receive(IvyClient client, String[] args) {
                     //System.out.println(" MouseReleased x= " + args[0] + " y= " + args[1]);
-                    try{
-                    dessin.setFinished(true);
-                    int x = Integer.parseInt(args[0]);
-                    int y = Integer.parseInt(args[1]);                    
-                    dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
+                    try {
+                        dessin.setFinished(true);
+                        int x = Integer.parseInt(args[0]);
+                        int y = Integer.parseInt(args[1]);
+                        dessin.getStroke().getPoints().add(new Point2D.Double(x, y));
                     } catch (CloneNotSupportedException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -105,18 +105,16 @@ public class IHMgesture extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup4 = new javax.swing.ButtonGroup();
-        dessin = new reco.Dessin();
         jButtonAjouterGeste = new javax.swing.JButton();
         jTextFieldForme = new javax.swing.JTextField();
         jRadioButtonEnregistrement = new javax.swing.JRadioButton();
         jRadioButtonReconnaissance = new javax.swing.JRadioButton();
         jButtonReconnaitre = new javax.swing.JButton();
+        dessin = new reco.Dessin();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IHM gesture");
         setLocation(new java.awt.Point(600, 300));
-
-        dessin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButtonAjouterGeste.setText("AjouterGeste");
         jButtonAjouterGeste.addActionListener(new java.awt.event.ActionListener() {
@@ -149,6 +147,8 @@ public class IHMgesture extends javax.swing.JFrame {
             }
         });
 
+        dessin.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,19 +157,20 @@ public class IHMgesture extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jRadioButtonEnregistrement)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jRadioButtonReconnaissance)
                         .addGap(28, 28, 28))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonReconnaitre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAjouterGeste, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jButtonAjouterGeste, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -180,8 +181,8 @@ public class IHMgesture extends javax.swing.JFrame {
                     .addComponent(jRadioButtonEnregistrement)
                     .addComponent(jRadioButtonReconnaissance))
                 .addGap(18, 18, 18)
-                .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dessin, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldForme, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonAjouterGeste))
@@ -232,7 +233,9 @@ public class IHMgesture extends javax.swing.JFrame {
 
     private void jButtonReconnaitreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReconnaitreActionPerformed
         // TODO add your handling code here:
-        dico.saveToFile();
+        if(dico.getStrokeMap().size() !=0){
+            dico.saveToFile();
+        }
         Stroke s;
         try {
             //---reconnaissance de la forme
@@ -242,9 +245,7 @@ public class IHMgesture extends javax.swing.JFrame {
             switch (forme) {
                 case "rectangle": {
                     try {
-                        //on peut précise la position (x,y) et la couleur
-                        bus.sendMsg("Palette:CreerRectangle x=50 y=50 couleurFond=BLACK");
-                        //créer la forme et l'enregistrer dans le dictionnaire
+                        bus.sendMsg("Rectangle");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -252,7 +253,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 break;
                 case "ellipse": {
                     try {
-                        bus.sendMsg("Palette:CreerEllipse x=50 y=50 couleurFond=BLACK");
+                        bus.sendMsg("Ellipse");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
