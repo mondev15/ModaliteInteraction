@@ -5,7 +5,9 @@
  */
 package structures;
 
-import java.awt.Point;
+import java.awt.geom.Point2D;
+
+
 
 /**
  *
@@ -15,34 +17,34 @@ public class Forme {
 
     private TypeForme monType = TypeForme.INDEFINI;
     private String nom;
-    private Point position;
+    private Point2D position;
 
     
-    private Couleur couleur;
+    private String couleur;
 
     
     public Forme(TypeForme type) {
        this.monType = type;
     }
    
-    public Forme(String _nom, Point _position) {
+    public Forme(String _nom, Point2D _position) {
         this.nom = nom;
-        this.position = (Point) _position.clone();
+        this.position = (Point2D) _position.clone();
     }
    
-    public Point getPosition() {
+    public Point2D getPosition() {
         return position;
     }
 
-    public void setPosition(Point _position) {
-        this.position = (Point) _position.clone();
+    public void setPosition(Point2D _position) {
+        this.position = (Point2D) _position.clone();
     }
     
-    public Couleur getCouleur() {
+    public String getCouleur() {
         return couleur;
     }
 
-    public void setCouleur(Couleur couleur) {
+    public void setCouleur(String couleur) {
         this.couleur = couleur;
     }
     

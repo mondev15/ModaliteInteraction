@@ -35,8 +35,10 @@ public class Automate {
     
    
     
-    enum State{INIT, OPTION, CLIC, POSITION};
+    enum State{INIT, OPTION, CLIC, POSITION, COLOR};
     private State state;
+    
+    LanguageVocal mots;
     
     private TypeForme forme;
     private Actions action;
@@ -45,6 +47,7 @@ public class Automate {
     
     enum VOCALPOS{ICI, LA, ACETTEPOSITION};
     private Point2D position;
+    private Point2D positionTmp;
     
     private Timer actionTimeOut;
     private Timer timerPointing;
@@ -60,33 +63,33 @@ public class Automate {
     
     private Ivy busIvy;
     
-     public void genererForme(){
-        // Creation.sendIvy
+
+    private void initAttribute(){
+        couleur = Couleur.RED;
+        forme = TypeForme.RECTANGLE;
+        position = new Point2D.Double(0,0);
+        positionTmp = new Point2D.Double(0,0);
+        action = null;
+        mots = null;
     }
-    
-     
-   
     
     public Automate(){
         state = State.INIT;
-        couleur = Couleur.ROUGE;
-        forme = TypeForme.RECTANGLE;
-        position = new Point2D.Double(0,0);
+        initAttribute();
+
         IvyApplicationListener listener = null;
         busIvy = new Ivy("FusionMultimodale","",listener);
         
         actionTimeOut = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
-            genererForme();
-            state = State.INIT;
+            timerOut();
         });
         
         timerPointing = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
-            genererForme();
-            state = State.INIT;
+            timerOut();
         });
         
         actionTimeOut.stop();
-        actionTimeOut.stop();
+        timerPointing.stop();
         
         try {
             busIvy.start("127.255.255.255:2010");
@@ -188,21 +191,20 @@ public class Automate {
             case OPTION:
                 switch(c){
                     case "ROUGE":
-                        this.couleur = Couleur.ROUGE;
+                        this.couleur = Couleur.RED;
                         break;
                     case "VERT":
-                        this.couleur = Couleur.VERT;
+                        this.couleur = Couleur.GREEN;
                         break;
                     case "BLEU":
-                        this.couleur = Couleur.BLEU;
+                        this.couleur = Couleur.BLUE;
                         break;
                     case "NOIR":
-                        this.couleur = Couleur.NOIR;
+                        this.couleur = Couleur.BLACK;
                         break;
                 }
                 
-                actionTimeOut.stop();
-                actionTimeOut.start();
+                startTimerOut();
                 state = State.OPTION;
                 break;
             case POSITION:
@@ -211,6 +213,9 @@ public class Automate {
             case CLIC:
                 //NE RIEN FAIRE
                 break;
+            case COLOR:
+                 //NE RIEN FAIRE
+                break;   
         }
     }
     
@@ -222,58 +227,152 @@ public class Automate {
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-                actionTimeOut.stop();
-                timerPointing.start();
+                positionTmp = position;
+                position = p;
+                startTimerClic();
                 state = State.CLIC;
                 break;
             case POSITION:
-                actionTimeOut.start();
-                timerPointing.stop();
+                positionTmp = position;
+                updateStructure();
+                startTimerOut();
                 state = State.OPTION;
                 break;
             case CLIC:
                 //NE RIEN FAIRE
                 break;
+            case COLOR:
+                getColor(p);
+                startTimerOut();
+                state = State.OPTION;
+                break;
         }
     }
     
-    
-    public void vocalHere(VOCALPOS v){
-        switch(state){
+    public void Vocal(LanguageVocal l){
+         switch(state){
             case INIT:
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-                if(v.equals(VOCALPOS.ICI) || v.equals(VOCALPOS.LA)||v.equals(VOCALPOS.ACETTEPOSITION)){
-                    actionTimeOut.stop();
-                    timerPointing.start();
+               if(l == LanguageVocal.Couleur)
+                    state = State.COLOR;
+                else
                     state = State.POSITION;
-                }else{
-                    actionTimeOut.start();
-                    timerPointing.stop();
-                    state = State.CLIC;
-                }
+                   
+                mots = l;
+                startTimerClic();
                 break;
             case POSITION:
                 //NE RIEN FAIRE
                 break;
             case CLIC:
-                if(v.equals(VOCALPOS.ICI) || v.equals(VOCALPOS.LA)||v.equals(VOCALPOS.ACETTEPOSITION)){
-                    actionTimeOut.start();
-                    timerPointing.stop();
-                    state = State.OPTION;
-                }else{
-                    actionTimeOut.stop();
-                    timerPointing.start();
-                    state = State.CLIC;
+                if(l == LanguageVocal.Couleur){
+                    getColor(this.position);
+                    position = positionTmp;
                 }
-            break;
-               
+                updateStructure();
+                startTimerOut();
+                state = State.OPTION;
+                break;
+            case COLOR:
+                //NE RIEN FAIRE
+                break;
+         }
+                
+    }
+    
+    public void timerOut(){
+        switch(state){
+            case INIT:
+                //NE RIEN FAIRE
+                break;
+            case OPTION:
+                if(action.isComplete())
+                    action.sendToIvy(busIvy);
+
+                actionTimeOut.stop();
+                initAttribute();
+                state = State.INIT;
+                break;
+            case POSITION:
+                retourOption();
+                break;
+            case CLIC:
+                retourOption();
+                break;
+            case COLOR:
+                retourOption();
+                break;   
         }
     }
     
+    private void startTimerClic(){
+        actionTimeOut.stop();
+        timerPointing.start();
+    }
+    private void startTimerOut(){
+        timerPointing.stop();
+        actionTimeOut.start();
+    }
+    
+    private void retourOption(){
+        startTimerOut();
+        state = State.OPTION;
+    }
+    
+    private void updateStructure(){
+        //Action de Creation INUTILE CHEZ NOUS
+        /*if(action instanceof Creation){
+            if(position )
+        }*/
+            
+            
+    }
     
     
-    
+    private void getColor(Point2D p){
+        try {
+            busIvy.bindMsg("Palette:ResultatTesterPoint x="+ p.getX() +" y="+ p.getY()+" nom=(.*)", (client, args) -> {
+               
+                try {
+                    
+                    try {
+                        //A MODIFIER POUR SUPPRIMER L'AFFICHAGE
+                        busIvy.bindMsg("Palette:Info nom="+args[0]+" x=(.*) y=(.*) longueur=(.*) hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", (client1, args1) -> {
+                            switch(args1[4]){
+                                case "green":
+                                    this.couleur = Couleur.GREEN;
+                                    break;
+                                case "blue":
+                                    this.couleur = Couleur.BLUE;
+                                    break;
+                                case "red":
+                                    this.couleur = Couleur.RED;
+                                    break;
+                                case "black":
+                                    this.couleur = Couleur.BLACK;
+                                    break;
+                            }
+                            updateStructure();
+                        });
+                    } catch (IvyException ex) {
+                        Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    //SUPPRIMER AFFICHAGE
+                    busIvy.sendMsg("Palette:DemanderInfo nom="+args[0]);
+                    System.out.println("sent demanderInfo over "+args[0]);
+                } catch (IvyException ex) {
+                    Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                }); 
+        } catch (IvyException ex) {
+            Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+         
+            
+         
+    }
     
 }

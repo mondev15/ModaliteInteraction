@@ -5,10 +5,13 @@
  */
 package structures;
 
+import fr.dgac.ivy.Ivy;
+
 /**
  *
  * @author saintsbe
  */
 public interface Actions {
     boolean isComplete();
+    void sendToIvy(Ivy busIvy);
 }

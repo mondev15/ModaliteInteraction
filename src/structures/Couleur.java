@@ -10,5 +10,5 @@ package structures;
  * @author saintsbe
  */
 public enum Couleur {
-    ROUGE, VERT, BLEU, NOIR
+    RED, GREEN, BLUE, BLACK
 }

@@ -6,10 +6,7 @@
 package structures;
 
 import fr.dgac.ivy.Ivy;
-import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
-import fr.dgac.ivy.IvyMessageListener;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,58 +17,62 @@ import java.util.logging.Logger;
  *
  * @author saintsbe
  */
-public class Suppression implements Actions {
-    
+public class Deplacement implements Actions{
+
     private boolean isComplete = false;
     private ArrayList<Forme> listeFormeSurPalette = new ArrayList<Forme>();
-    
-    public Suppression() {
-        
+    private Point2D position;
+
+    public Point2D getPosition() {
+        return position;
     }
-   
- 
+
+    public void setPosition(Point2D position) {
+        this.position = position;
+    }
+    
     @Override
     public boolean isComplete() {
         isComplete = (!listeFormeSurPalette.isEmpty()) && (listeFormeSurPalette != null);
         return isComplete;
     }
-    
-    
-    public void sendToIvy(Ivy busIvy){
-        try {
-            busIvy.sendMsg("Palette:SupprimerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
-        } catch (IvyException ex) {
-            Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        //A SUPPRIMER
-            System.out.println("Palette:SupprimerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
-    }
 
+    @Override
+    public void sendToIvy(Ivy busIvy) {
+     
+        try {
+            busIvy.sendMsg("Palette:DeplacerObjetAbsolu nom=" + this.listeFormeSurPalette.get(0).getNom() +" x="+ this.position.getX()+" y="+this.position.getY());
+        } catch (IvyException ex) {
+            Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+        //A SUPPRIMER
+            System.out.println("Palette:DeplacerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
+    }
     
-     public void filter(Point2D p, Ivy busIvy) {
-       
+     public void filter(Ivy busIvy, Point2D p) {
+
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x=" + p.getX() + " y=" + p.getY() + " nom=(.*)", (client, args) -> {
-                
+               
                 try {
                     busIvy.sendMsg("Palette:DemanderInfo nom=" + args[0]);
                 } catch (IvyException ex) {
-                    Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
                 }
-               
+                
             });
         } catch (IvyException ex) {
-            Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         try {
             busIvy.bindMsg("Palette:Info nom=(.*) x=(.*) y=(.*) longueur=(.*) "
                     + "hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", (client, args) -> {
                         Forme forme = new Forme(args[0],
-                                new Point2D.Double(Integer.parseInt(args[1]),
-                                        Integer.parseInt(args[2])));
+                        new Point2D.Double(Integer.parseInt(args[1]),
+                                    Integer.parseInt(args[2])));
                         forme.setCouleur(args[5]);
+                        
                         if(args[0].startsWith("Rectangle")){
                             forme.setMonType(TypeForme.RECTANGLE);
                         }else if(args[0].startsWith("Ellipse")){
@@ -79,21 +80,17 @@ public class Suppression implements Actions {
                         }
                         listeFormeSurPalette.add(forme);
                         
-                        
                     });
         } catch (IvyException ex) {
-            Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
         }
-           
         try {
             busIvy.sendMsg("Palette:TesterPoint x=" + p.getX() + " y=" + p.getY());
         } catch (IvyException ex) {
-            Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+       
     }
-    
-
 
     public void filter(TypeForme type) {
         Iterator<Forme> it = listeFormeSurPalette.iterator();
@@ -114,7 +111,6 @@ public class Suppression implements Actions {
             }
         }
     }
-
-                
+    
+    
 }
-        
