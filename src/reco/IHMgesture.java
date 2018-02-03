@@ -244,7 +244,7 @@ public class IHMgesture extends javax.swing.JFrame {
             switch (geste) {
                 case "rectangle": {
                     try {
-                        bus.sendMsg("Rectangle");
+                        bus.sendMsg("gesture action=Rectangle");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -252,7 +252,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 break;
                 case "supprimer": {
                     try {
-                        bus.sendMsg("Supprimer");
+                        bus.sendMsg("gesture action=Supprimer");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -261,7 +261,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 break;
                 case "deplacer": {
                     try {
-                        bus.sendMsg("Deplacer");
+                        bus.sendMsg("gesture action=Deplacer");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -270,7 +270,7 @@ public class IHMgesture extends javax.swing.JFrame {
                 break;
                 case "ellipse": {
                     try {
-                        bus.sendMsg("Ellipse");
+                        bus.sendMsg("gesture action=Ellipse");
                     } catch (IvyException ex) {
                         Logger.getLogger(IHMgesture.class.getName()).log(Level.SEVERE, null, ex);
                     }

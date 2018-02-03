@@ -32,7 +32,10 @@ import structures.TypeActions;
  * @author benjamin.saint-sever
  */
 public class Automate {
-    
+     public static void main(String args[]) {
+        Automate a = new Automate();
+     }
+     
     enum State{INIT, OPTION, CLIC, POSITION, COLOR};
     private State state;
     
@@ -93,6 +96,7 @@ public class Automate {
             busIvy.start("127.255.255.255:2010");
             
             busIvy.bindMsg("gesture action=(.*)", (IvyClient client, String[] args) -> {
+                
                 //INIT ?
                 actions(args[0]);
             });
@@ -104,11 +108,13 @@ public class Automate {
                 if( tauxReco>TAUXRECOMIN){
                     couleur(args[0]);
                 }
+                 System.out.println("Reconnaissance Couleur ok : "+args[0] );
             });
             
             busIvy.bindMsg("Palette:Mouse(.*) x=(.*) y=(.*)", (client, args) -> {
                 if(args[0].equals("Clicked")){
                     clic(new Point(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
+                    System.out.println("Reconnaissance Click ok : x="+args[1]+" y="+args[2] );
                 }
             });
             
