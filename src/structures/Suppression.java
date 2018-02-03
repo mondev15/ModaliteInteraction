@@ -49,7 +49,7 @@ public class Suppression implements Actions {
     }
 
     
-     public void filter(Point2D p, Ivy busIvy) {
+     public void filter(Ivy busIvy, Point2D p) {
        
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x=" + p.getX() + " y=" + p.getY() + " nom=(.*)", (client, args) -> {

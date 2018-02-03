@@ -21,6 +21,7 @@ import javax.swing.Timer;
 import structures.Actions;
 import structures.Couleur;
 import structures.Creation;
+import structures.Deplacement;
 import structures.LanguageVocal;
 import structures.Suppression;
 import structures.TypeActions;
@@ -32,9 +33,6 @@ import structures.TypeActions;
  */
 public class Automate {
     
-    
-   
-    
     enum State{INIT, OPTION, CLIC, POSITION, COLOR};
     private State state;
     
@@ -45,7 +43,7 @@ public class Automate {
     
     private Couleur couleur;
     
-    enum VOCALPOS{ICI, LA, ACETTEPOSITION};
+ 
     private Point2D position;
     private Point2D positionTmp;
     
@@ -322,15 +320,50 @@ public class Automate {
     }
     
     private void updateStructure(){
-        //Action de Creation INUTILE CHEZ NOUS
-        /*if(action instanceof Creation){
-            if(position )
-        }*/
-            
-            
+        if(action instanceof Creation){
+            if(this.position != null){
+                ((Creation)action).setPosition((Point2D) this.position);                
+            }
+            if(this.couleur != null){
+                ((Creation)action).setCouleur(this.couleur.toString());
+            }
+            //todo designerCouleur
+        }else if(action instanceof Deplacement){
+            if(action != null && mots !=null){
+                if(mots == LanguageVocal.Position){
+                    ((Deplacement)action).setPosition(this.position);
+                }else if(mots == LanguageVocal.Ellipse){
+                    ((Deplacement)action).filter(busIvy,position);
+                    ((Deplacement)action).filter(TypeForme.ELLIPSE);
+                }else if(mots == LanguageVocal.Rectangle){
+                    ((Deplacement)action).filter(busIvy,position);
+                    ((Deplacement)action).filter(TypeForme.RECTANGLE);
+                }else if(mots == LanguageVocal.Objet){
+                    ((Deplacement)action).filter(busIvy,position);
+                }
+            }
+            if(couleur != null){
+                ((Deplacement)action).filter(couleur.toString());
+            }
+        }else if(action instanceof Suppression){
+            if(this.position != null && mots !=null){
+                if(mots == LanguageVocal.Ellipse){
+                    ((Suppression)action).filter(busIvy, position);
+                    ((Suppression)action).filter(TypeForme.ELLIPSE);
+                }else if(mots == LanguageVocal.Rectangle){
+                    ((Suppression)action).filter(busIvy,position);
+                    ((Suppression)action).filter(TypeForme.RECTANGLE);
+                }else if(mots == LanguageVocal.Objet){
+                    ((Suppression)action).filter(busIvy,position);
+                }
+            }
+            if(couleur != null){
+                ((Suppression)action).filter(couleur.toString());
+            }
+        }
     }
-    
-    
+            
+
     private void getColor(Point2D p){
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x="+ p.getX() +" y="+ p.getY()+" nom=(.*)", (client, args) -> {
