@@ -61,9 +61,9 @@ public class Dessin extends javax.swing.JComponent {
         // on vérifie s il y a release avant de normaliser 
         if (finished) {
             g.setColor(Color.BLUE);
-            for (int i = 0; i < stroke.size(); i++) {
+                for (int i = 0; i < stroke.size(); i++) {
                 stroke.normalize();
-                g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
+                //g2.fillOval((int) stroke.getPoint(i).getX(), (int) stroke.getPoint(i).getY(), 3, 3);
             }
         }
     }
@@ -81,11 +81,11 @@ public class Dessin extends javax.swing.JComponent {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 448, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 352, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
