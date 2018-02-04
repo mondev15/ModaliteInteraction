@@ -42,9 +42,7 @@ public class Suppression implements Actions {
         } catch (IvyException ex) {
             Logger.getLogger(Suppression.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        //A SUPPRIMER
-            System.out.println("Palette:SupprimerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
+       
     }
 
     

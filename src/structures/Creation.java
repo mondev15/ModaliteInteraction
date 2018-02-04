@@ -66,10 +66,6 @@ public class Creation implements Actions {
             }
             
             
-            //A SUPPRIMER
-                System.out.println("Palette:CreerRectangle x=" + (int)this.position.getX() + ""
-                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
-            
         } else if (forme.getMonType() == TypeForme.ELLIPSE){
            
             try {
@@ -79,10 +75,6 @@ public class Creation implements Actions {
                 Logger.getLogger(Creation.class.getName()).log(Level.SEVERE, null, ex);
             }
                 
-               //A SUPPRIMER
-               System.out.println("Palette:CreerEllipse x=" +(int) this.position.getX() + ""
-                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
-           
         }
     }
     

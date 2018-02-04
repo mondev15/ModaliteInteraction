@@ -46,9 +46,7 @@ public class Deplacement implements Actions{
         } catch (IvyException ex) {
             Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
-        //A SUPPRIMER
-            System.out.println("Palette:DeplacerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
+
     }
     
      public void trouverPoint(Ivy busIvy, Point p) {

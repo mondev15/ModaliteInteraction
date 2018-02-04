@@ -151,8 +151,6 @@ public class Automate {
                     } else if (args[0].equals("cette ellipse")){
                         vocal(LanguageVocal.Ellipse);
                     }
-                    //A SUPPRIMER
-                    System.out.println("Designer forme : "+args[0]);
                 }
             });
             
@@ -215,7 +213,7 @@ public class Automate {
                 }
                
                
-                updateStructure();
+                majSelonAction();
                 
                 retourOption();
                 break;
@@ -240,6 +238,7 @@ public class Automate {
                 positionTmp = p;
                 position = p;
                 startTimerOption();
+                majSelonAction();
                 state = State.CLIC;
                 break;
             case POSITION:
@@ -248,7 +247,7 @@ public class Automate {
                 }
                 
                 position = p;
-                updateStructure();
+                majSelonAction();
                 retourOption();
                 break;
             case CLIC:
@@ -289,7 +288,7 @@ public class Automate {
                     position = positionTmp;
                 }
                 mots = l;
-                updateStructure();
+                majSelonAction();
                 retourOption();
                 break;
           
@@ -342,7 +341,7 @@ public class Automate {
         System.out.println("Retour Etat Option");
     }
     
-    private void updateStructure(){
+    private void majSelonAction(){
          System.out.println("Update action");;
         if(action instanceof Creation){
             System.out.println("Update action est une instance de CreATION");
@@ -350,10 +349,8 @@ public class Automate {
                 System.out.println("Update : X="+(int)position.getX()+" Y="+ (int)position.getY());
                 ((Creation)action).setPosition((Point) this.position);                
             }
-            if(this.couleur != null){
+            if(this.couleur != null)
                 ((Creation)action).setCouleur(this.couleur.toString());
-            }
-            //todo designerCouleur
         }else if(action instanceof Deplacement){
             if(action != null && mots !=null){
                 if(mots == LanguageVocal.Position){
@@ -399,7 +396,7 @@ public class Automate {
                 try {
                     
                     try {
-                        //A MODIFIER POUR SUPPRIMER L'AFFICHAGE
+                        
                         busIvy.bindMsg("Palette:Info nom="+args[0]+" x=(.*) y=(.*) longueur=(.*) hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", (client1, args1) -> {
                             switch(args1[4]){
                                 case "green":
@@ -416,14 +413,13 @@ public class Automate {
                                     this.couleur = Couleur.BLACK;
                                     break;
                             }
-                            updateStructure();
+                            majSelonAction();
                         });
                     } catch (IvyException ex) {
                         Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    //SUPPRIMER AFFICHAGE
                     busIvy.sendMsg("Palette:DemanderInfo nom="+args[0]);
-                    System.out.println("sent demanderInfo over "+args[0]);
+                  
                 } catch (IvyException ex) {
                     Logger.getLogger(Automate.class.getName()).log(Level.SEVERE, null, ex);
                 }
