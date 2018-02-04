@@ -95,7 +95,6 @@ public class Automate {
             busIvy.start("127.255.255.255:2010");
             
             busIvy.bindMsg("gesture action=(.*)", (IvyClient client, String[] args) -> {
-                
                 initAttribute();
                 actions(args[0]);
             });
@@ -130,7 +129,7 @@ public class Automate {
                     System.out.println("Reconnaissance Position NOTok :"+ args[0] );
                 }
             });
-            busIvy.bindMsg("sra5 Parsed=DesignationCouleur: Confidence=(.*) NP=.*", (client, args) -> {
+            busIvy.bindMsg("sra5 Parsed=DesignationCouleur:.* Confidence=(.*) NP=.*", (client, args) -> {
                 String Reco = args[0].split(",")[1];
                 int tauxReco = Integer.parseInt(Reco);
                 if(tauxReco>TAUXRECOMIN){
@@ -288,7 +287,7 @@ public class Automate {
                 if(l == LanguageVocal.Position){
                     position = positionTmp;
                 }
-                    
+                mots = l;
                 updateStructure();
                 retourOption();
                 break;
@@ -374,6 +373,7 @@ public class Automate {
         }else if(action instanceof Suppression){
             if(this.position != null && mots !=null){
                 if(mots == LanguageVocal.Ellipse){
+                    System.out.println("Ellipse detecté, a supprimer");
                     ((Suppression)action).filter(busIvy, position);
                     ((Suppression)action).filter(TypeForme.ELLIPSE);
                 }else if(mots == LanguageVocal.Rectangle){
