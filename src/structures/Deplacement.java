@@ -51,7 +51,7 @@ public class Deplacement implements Actions{
             System.out.println("Palette:DeplacerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
     }
     
-     public void filter(Ivy busIvy, Point p) {
+     public void trouverPoint(Ivy busIvy, Point p) {
 
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x=" + (int)p.getX() + " y=" + (int)p.getY() + " nom=(.*)", (client, args) -> {
@@ -93,7 +93,7 @@ public class Deplacement implements Actions{
        
     }
 
-    public void filter(TypeForme type) {
+    public void trouverType(TypeForme type) {
         Iterator<Forme> it = listeFormeSurPalette.iterator();
         while(it.hasNext()){
             Forme f = it.next();
@@ -103,7 +103,7 @@ public class Deplacement implements Actions{
         }
     }
 
-    public void filter(String color) {
+    public void trouverCouleur(String color) {
         Iterator<Forme> it = listeFormeSurPalette.iterator();
         while(it.hasNext()){
             Forme f = it.next();
