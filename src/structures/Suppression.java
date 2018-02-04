@@ -48,7 +48,7 @@ public class Suppression implements Actions {
     }
 
     
-     public void filter(Ivy busIvy, Point p) {
+     public void trouverPoint(Ivy busIvy, Point p) {
          System.out.println("Filter");
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x=" + p.getX() + " y=" + p.getY() + " nom=(.*)", (client, args) -> {
@@ -94,7 +94,7 @@ public class Suppression implements Actions {
     
 
 
-    public void filter(TypeForme type) {
+    public void trouverType(TypeForme type) {
         Iterator<Forme> it = listeFormeSurPalette.iterator();
         while(it.hasNext()){
             Forme f = it.next();
@@ -104,8 +104,8 @@ public class Suppression implements Actions {
         }
     }
 
-    public void filter(String color) {
-        //System.out.println("listeFormeSurPalette contient : " + listeFormeSurPalette.size());
+    public void trouverCouleur(String color) {
+       System.out.println("listeFormeSurPalette contient : " + listeFormeSurPalette.size());
         
         Iterator<Forme> it = listeFormeSurPalette.iterator();
         while(it.hasNext()){

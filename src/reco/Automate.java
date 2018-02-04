@@ -97,6 +97,7 @@ public class Automate {
             busIvy.bindMsg("gesture action=(.*)", (IvyClient client, String[] args) -> {
                 initAttribute();
                 actions(args[0]);
+
             });
             
             
@@ -124,7 +125,7 @@ public class Automate {
                 //APPLIQUER LA METHODE DE PARSING ICI
                 if(tauxReco>TAUXRECOMIN){
                     System.out.println("Reconnaissance Position ok" );
-                    Vocal(LanguageVocal.Position);
+                    vocal(LanguageVocal.Position);
                 }else{
                     System.out.println("Reconnaissance Position NOTok :"+ args[0] );
                 }
@@ -134,7 +135,7 @@ public class Automate {
                 int tauxReco = Integer.parseInt(Reco);
                 if(tauxReco>TAUXRECOMIN){
                     System.out.println("Designation couleur OK");
-                     Vocal(LanguageVocal.Couleur);
+                     vocal(LanguageVocal.Couleur);
                 }else{
                     System.out.println("Designation couleur NOTOK");
                 }
@@ -144,11 +145,11 @@ public class Automate {
                 int tauxReco = Integer.parseInt(Reco);
                 if(tauxReco>TAUXRECOMIN){
                     if(args[0].equals("cet objet")){
-                        Vocal(LanguageVocal.Objet);
+                        vocal(LanguageVocal.Objet);
                     } else if (args[0].equals("ce rectangle")){
-                        Vocal(LanguageVocal.Rectangle);
+                        vocal(LanguageVocal.Rectangle);
                     } else if (args[0].equals("cette ellipse")){
-                        Vocal(LanguageVocal.Ellipse);
+                        vocal(LanguageVocal.Ellipse);
                     }
                     //A SUPPRIMER
                     System.out.println("Designer forme : "+args[0]);
@@ -256,7 +257,7 @@ public class Automate {
         }
     }
     
-    public void Vocal(LanguageVocal l){
+    public void vocal(LanguageVocal l){
          switch(state){
             case INIT:
                 //NE RIEN FAIRE
@@ -268,7 +269,7 @@ public class Automate {
                    System.out.println("Vocal+OPTION");
                     mots = l;
                     startTimerOption();
-                    retourOption();
+                    //retourOption();
                }
                else{
                     state = State.POSITION;
@@ -358,33 +359,33 @@ public class Automate {
                 if(mots == LanguageVocal.Position){
                     ((Deplacement)action).setPosition(this.position);
                 }else if(mots == LanguageVocal.Ellipse){
-                    ((Deplacement)action).filter(busIvy,position);
-                    ((Deplacement)action).filter(TypeForme.ELLIPSE);
+                    ((Deplacement)action).trouverPoint(busIvy,position);
+                    ((Deplacement)action).trouverType(TypeForme.ELLIPSE);
                 }else if(mots == LanguageVocal.Rectangle){
-                    ((Deplacement)action).filter(busIvy,position);
-                    ((Deplacement)action).filter(TypeForme.RECTANGLE);
+                    ((Deplacement)action).trouverPoint(busIvy,position);
+                    ((Deplacement)action).trouverType(TypeForme.RECTANGLE);
                 }else if(mots == LanguageVocal.Objet){
-                    ((Deplacement)action).filter(busIvy,position);
+                    ((Deplacement)action).trouverPoint(busIvy,position);
                 }
             }
             if(couleur != null){
-                ((Deplacement)action).filter(couleur.toString());
+                ((Deplacement)action).trouverCouleur(couleur.toString());
             }
         }else if(action instanceof Suppression){
             if(this.position != null && mots !=null){
                 if(mots == LanguageVocal.Ellipse){
                     System.out.println("Ellipse detecté, a supprimer");
-                    ((Suppression)action).filter(busIvy, position);
-                    ((Suppression)action).filter(TypeForme.ELLIPSE);
+                    ((Suppression)action).trouverPoint(busIvy, position);
+                    ((Suppression)action).trouverType(TypeForme.ELLIPSE);
                 }else if(mots == LanguageVocal.Rectangle){
-                    ((Suppression)action).filter(busIvy,position);
-                    ((Suppression)action).filter(TypeForme.RECTANGLE);
+                    ((Suppression)action).trouverPoint(busIvy,position);
+                    ((Suppression)action).trouverType(TypeForme.RECTANGLE);
                 }else if(mots == LanguageVocal.Objet){
-                    ((Suppression)action).filter(busIvy,position);
+                    ((Suppression)action).trouverPoint(busIvy,position);
                 }
             }
             if(couleur != null){
-                ((Suppression)action).filter(couleur.toString());
+                ((Suppression)action).trouverCouleur(couleur.toString());
             }
         }
     }
