@@ -7,7 +7,8 @@ package structures;
 
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyException;
-import java.awt.geom.Point2D;
+import java.awt.Point;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -21,13 +22,13 @@ public class Deplacement implements Actions{
 
     private boolean isComplete = false;
     private ArrayList<Forme> listeFormeSurPalette = new ArrayList<Forme>();
-    private Point2D position;
+    private Point position;
 
-    public Point2D getPosition() {
+    public Point getPosition() {
         return position;
     }
 
-    public void setPosition(Point2D position) {
+    public void setPosition(Point position) {
         this.position = position;
     }
     
@@ -41,7 +42,7 @@ public class Deplacement implements Actions{
     public void sendToIvy(Ivy busIvy) {
      
         try {
-            busIvy.sendMsg("Palette:DeplacerObjetAbsolu nom=" + this.listeFormeSurPalette.get(0).getNom() +" x="+ this.position.getX()+" y="+this.position.getY());
+            busIvy.sendMsg("Palette:DeplacerObjetAbsolu nom=" + this.listeFormeSurPalette.get(0).getNom() +" x="+ (int)this.position.getX()+" y="+(int)this.position.getY());
         } catch (IvyException ex) {
             Logger.getLogger(Deplacement.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -50,10 +51,10 @@ public class Deplacement implements Actions{
             System.out.println("Palette:DeplacerObjet nom=" + this.listeFormeSurPalette.get(0).getNom());
     }
     
-     public void filter(Ivy busIvy, Point2D p) {
+     public void filter(Ivy busIvy, Point p) {
 
         try {
-            busIvy.bindMsg("Palette:ResultatTesterPoint x=" + p.getX() + " y=" + p.getY() + " nom=(.*)", (client, args) -> {
+            busIvy.bindMsg("Palette:ResultatTesterPoint x=" + (int)p.getX() + " y=" + (int)p.getY() + " nom=(.*)", (client, args) -> {
                
                 try {
                     busIvy.sendMsg("Palette:DemanderInfo nom=" + args[0]);
@@ -69,7 +70,7 @@ public class Deplacement implements Actions{
             busIvy.bindMsg("Palette:Info nom=(.*) x=(.*) y=(.*) longueur=(.*) "
                     + "hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", (client, args) -> {
                         Forme forme = new Forme(args[0],
-                        new Point2D.Double(Integer.parseInt(args[1]),
+                        new Point(Integer.parseInt(args[1]),
                                     Integer.parseInt(args[2])));
                         forme.setCouleur(args[5]);
                         

@@ -10,7 +10,6 @@ import fr.dgac.ivy.IvyClient;
 import fr.dgac.ivy.IvyException;
 import fr.dgac.ivy.IvyMessageListener;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -49,7 +48,7 @@ public class Suppression implements Actions {
     }
 
     
-     public void filter(Ivy busIvy, Point2D p) {
+     public void filter(Ivy busIvy, Point p) {
        
         try {
             busIvy.bindMsg("Palette:ResultatTesterPoint x=" + p.getX() + " y=" + p.getY() + " nom=(.*)", (client, args) -> {
@@ -69,7 +68,7 @@ public class Suppression implements Actions {
             busIvy.bindMsg("Palette:Info nom=(.*) x=(.*) y=(.*) longueur=(.*) "
                     + "hauteur=(.*) couleurFond=(.*) couleurContour=(.*)", (client, args) -> {
                         Forme forme = new Forme(args[0],
-                                new Point2D.Double(Integer.parseInt(args[1]),
+                                new Point(Integer.parseInt(args[1]),
                                         Integer.parseInt(args[2])));
                         forme.setCouleur(args[5]);
                         if(args[0].startsWith("Rectangle")){

@@ -7,7 +7,7 @@ package structures;
 
 import fr.dgac.ivy.Ivy;
 import fr.dgac.ivy.IvyException;
-import java.awt.geom.Point2D;
+import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +17,11 @@ import java.util.logging.Logger;
  */
 public class Creation implements Actions {
 
-    private boolean isComplete = false;
+    private boolean isComplete = true;
     private Forme forme;
     private String couleur;
     
-    private Point2D position = new Point2D.Double(50,50);
+    private Point position;
     
     @Override
     public boolean isComplete() {
@@ -30,10 +30,12 @@ public class Creation implements Actions {
 
     public Creation(){
         this.forme.setMonType(TypeForme.INDEFINI);
+        position = new Point(50,50);
     }
     public Creation(String _couleur, TypeForme _forme) {
         this.couleur = _couleur;
         this.forme = new Forme(_forme);
+        position = new Point(50,50);
     }
 
     public String getCouleur() {
@@ -44,11 +46,11 @@ public class Creation implements Actions {
         this.couleur = couleur;
     }
 
-    public Point2D getPosition() {
+    public Point getPosition() {
         return position;
     }
 
-    public void setPosition(Point2D position) {
+    public void setPosition(Point position) {
         this.position = position;
     }
    
@@ -57,29 +59,29 @@ public class Creation implements Actions {
         if(forme.getMonType() == TypeForme.RECTANGLE){
            
             try {
-                busIvy.sendMsg("Palette:CreerRectangle x=" + this.position.getX() + ""
-                        + " y=" + this.position.getY() + " couleurFond=" + this.couleur);
+                busIvy.sendMsg("Palette:CreerRectangle x=" + (int)this.position.getX() + ""
+                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
             } catch (IvyException ex) {
                 Logger.getLogger(Creation.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
             //A SUPPRIMER
-                System.out.println("Palette:CreerRectangle x=" + this.position.getX() + ""
-                        + " y=" + this.position.getY() + " couleurFond=" + this.couleur);
+                System.out.println("Palette:CreerRectangle x=" + (int)this.position.getX() + ""
+                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
             
         } else if (forme.getMonType() == TypeForme.ELLIPSE){
            
             try {
-                busIvy.sendMsg("Palette:CreerEllipse x=" + this.position.getX() + ""
-                        + " y=" + this.position.getY() + " couleurFond=" + this.couleur);
+                busIvy.sendMsg("Palette:CreerEllipse x=" + (int)this.position.getX() + ""
+                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
             } catch (IvyException ex) {
                 Logger.getLogger(Creation.class.getName()).log(Level.SEVERE, null, ex);
             }
                 
                //A SUPPRIMER
-               System.out.println("Palette:CreerEllipse x=" + this.position.getX() + ""
-                        + " y=" + this.position.getY() + " couleurFond=" + this.couleur);
+               System.out.println("Palette:CreerEllipse x=" +(int) this.position.getX() + ""
+                        + " y=" + (int)this.position.getY() + " couleurFond=" + this.couleur);
            
         }
     }

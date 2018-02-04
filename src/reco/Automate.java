@@ -14,7 +14,6 @@ import fr.dgac.ivy.IvyMessageListener;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -36,7 +35,7 @@ public class Automate {
         Automate a = new Automate();
      }
      
-    enum State{INIT, OPTION, CLIC, POSITION, COLOR};
+    enum State{INIT, OPTION, CLIC, POSITION};
     private State state;
     
     LanguageVocal mots;
@@ -47,12 +46,12 @@ public class Automate {
     private Couleur couleur;
     
  
-    private Point2D position;
-    private Point2D positionTmp;
+    private Point position;
+    private Point positionTmp;
     
-    private Timer actionTimeOut;
-    private Timer timerPointing;
-    private int delayTimer = 2000;
+    private Timer timerOut;
+    private Timer timerOption;
+    private int delayTimer = 5000;
     
     private final int TAUXRECOMIN = 79;
     
@@ -68,8 +67,8 @@ public class Automate {
     private void initAttribute(){
         couleur = Couleur.RED;
         forme = TypeForme.RECTANGLE;
-        position = new Point2D.Double(0,0);
-        positionTmp = new Point2D.Double(0,0);
+        position = new Point(0,0);
+        positionTmp = new Point(0,0);
         action = null;
         mots = null;
     }
@@ -81,23 +80,23 @@ public class Automate {
         IvyApplicationListener listener = null;
         busIvy = new Ivy("FusionMultimodale","",listener);
         
-        actionTimeOut = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
+        timerOut = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
             timerOut();
         });
         
-        timerPointing = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
+        timerOption = new javax.swing.Timer(delayTimer, (ActionEvent e) -> {
             timerOut();
         });
         
-        actionTimeOut.stop();
-        timerPointing.stop();
+        timerOut.stop();
+        timerOption.stop();
         
         try {
             busIvy.start("127.255.255.255:2010");
             
             busIvy.bindMsg("gesture action=(.*)", (IvyClient client, String[] args) -> {
                 
-                //INIT ?
+                initAttribute();
                 actions(args[0]);
             });
             
@@ -106,32 +105,39 @@ public class Automate {
                 String Reco = args[1].split(",")[1];
                 int tauxReco = Integer.parseInt(Reco);
                 if( tauxReco>TAUXRECOMIN){
-                    couleur(args[0]);
+                    color(args[0]);
+                    System.out.println("Reconnaissance Couleur ok : "+args[0] );
                 }
-                 System.out.println("Reconnaissance Couleur ok : "+args[0] );
+                 
             });
             
             busIvy.bindMsg("Palette:Mouse(.*) x=(.*) y=(.*)", (client, args) -> {
                 if(args[0].equals("Clicked")){
                     clic(new Point(Integer.parseInt(args[1]), Integer.parseInt(args[2])));
-                    System.out.println("Reconnaissance Click ok : x="+args[1]+" y="+args[2] );
+                    System.out.println("Reconnaissance Click ok : x="+Integer.parseInt(args[1])+" y="+args[2] );
                 }
             });
+           
             
-            
-            busIvy.bindMsg("sra5 Parsed=DesignationPosition: Confidence=(.*) NP=.*", (client, args) -> {
-                String Reco = args[1].split(",")[1];
+            busIvy.bindMsg("sra5 Parsed=DesignationPosition:.* Confidence=(.*) NP=.*", (client, args) -> {
+                String Reco = args[0].split(",")[1];
                 int tauxReco = Integer.parseInt(Reco);
                 //APPLIQUER LA METHODE DE PARSING ICI
                 if(tauxReco>TAUXRECOMIN){
+                    System.out.println("Reconnaissance Position ok" );
                     Vocal(LanguageVocal.Position);
+                }else{
+                    System.out.println("Reconnaissance Position NOTok :"+ args[0] );
                 }
             });
             busIvy.bindMsg("sra5 Parsed=DesignationCouleur: Confidence=(.*) NP=.*", (client, args) -> {
-                String Reco = args[1].split(",")[1];
+                String Reco = args[0].split(",")[1];
                 int tauxReco = Integer.parseInt(Reco);
                 if(tauxReco>TAUXRECOMIN){
+                    System.out.println("Designation couleur OK");
                      Vocal(LanguageVocal.Couleur);
+                }else{
+                    System.out.println("Designation couleur NOTOK");
                 }
             });
             busIvy.bindMsg("sra5 Parsed=DesignationForme:(.*) Confidence=(.*) NP=.*", (client, args) -> {
@@ -175,41 +181,43 @@ public class Automate {
                 action = new Creation(couleur.toString(), forme);
                 break;
             case "Deplacer":
-                //TODO
+                action = new Deplacement();
                 break;
             case "Supprimer":
                 action = new Suppression();
                 break;
         }
-        state = State.OPTION;
-        actionTimeOut.start();
-        timerPointing.stop();  
+        retourOption();
     }
     
     
-    public void couleur(String c){
+    public void color(String c){
         switch(state){
             case INIT:
                 //NE RIEN FAIRE
                 break;
             case OPTION:
+                System.out.println("Appel a fonction color : "+ c);
+                //PArsingCouleur
                 switch(c){
-                    case "ROUGE":
+                    case "rouge":
                         this.couleur = Couleur.RED;
                         break;
-                    case "VERT":
+                    case "vert":
                         this.couleur = Couleur.GREEN;
                         break;
-                    case "BLEU":
+                    case "bleu":
                         this.couleur = Couleur.BLUE;
                         break;
-                    case "NOIR":
+                    case "noir":
                         this.couleur = Couleur.BLACK;
                         break;
                 }
+               
+               
+                updateStructure();
                 
-                startTimerOut();
-                state = State.OPTION;
+                retourOption();
                 break;
             case POSITION:
                 //NE RIEN FAIRE
@@ -217,38 +225,34 @@ public class Automate {
             case CLIC:
                 //NE RIEN FAIRE
                 break;
-            case COLOR:
-                 //NE RIEN FAIRE
-                break;   
+             
         }
     }
     
     
     /*ONCLICK APPELLE CLIC*/
-    public void clic(Point2D p){
+    public void clic(Point p){
         switch(state){
             case INIT:
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-                positionTmp = position;
+                positionTmp = p;
                 position = p;
-                startTimerClic();
+                startTimerOption();
                 state = State.CLIC;
                 break;
             case POSITION:
-                positionTmp = position;
+                if(mots == LanguageVocal.Couleur){
+                    getColor(p);
+                }
+                
+                position = p;
                 updateStructure();
-                startTimerOut();
-                state = State.OPTION;
+                retourOption();
                 break;
             case CLIC:
                 //NE RIEN FAIRE
-                break;
-            case COLOR:
-                getColor(p);
-                startTimerOut();
-                state = State.OPTION;
                 break;
         }
     }
@@ -259,29 +263,36 @@ public class Automate {
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-               if(l == LanguageVocal.Couleur)
-                    state = State.COLOR;
-                else
+                
+                //A MODIFIER
+               if(l == LanguageVocal.Couleur){
+                   System.out.println("Vocal+OPTION");
+                    mots = l;
+                    startTimerOption();
+                    retourOption();
+               }
+               else{
                     state = State.POSITION;
-                   
-                mots = l;
-                startTimerClic();
+                    startTimerOption();
+               }
                 break;
             case POSITION:
                 //NE RIEN FAIRE
                 break;
             case CLIC:
+                System.out.println("Vocal+CLIC");
                 if(l == LanguageVocal.Couleur){
                     getColor(this.position);
                     position = positionTmp;
                 }
+                if(l == LanguageVocal.Position){
+                    position = positionTmp;
+                }
+                    
                 updateStructure();
-                startTimerOut();
-                state = State.OPTION;
+                retourOption();
                 break;
-            case COLOR:
-                //NE RIEN FAIRE
-                break;
+          
          }
                 
     }
@@ -292,10 +303,11 @@ public class Automate {
                 //NE RIEN FAIRE
                 break;
             case OPTION:
-                if(action.isComplete())
+                //if(action.isComplete())
                     action.sendToIvy(busIvy);
 
-                actionTimeOut.stop();
+                timerOption.stop();
+                    //stopAllTimer();
                 initAttribute();
                 state = State.INIT;
                 break;
@@ -304,31 +316,39 @@ public class Automate {
                 break;
             case CLIC:
                 retourOption();
-                break;
-            case COLOR:
-                retourOption();
-                break;   
+                break; 
         }
     }
     
-    private void startTimerClic(){
-        actionTimeOut.stop();
-        timerPointing.start();
+    private void startTimerOption(){
+        stopAllTimer();
+        timerOut.stop();
+        timerOption.start();
     }
     private void startTimerOut(){
-        timerPointing.stop();
-        actionTimeOut.start();
+        stopAllTimer();
+        timerOut.start();
+        timerOut.start();
+    }
+    
+    private void stopAllTimer(){
+        timerOption.stop();
+        timerOut.stop();
     }
     
     private void retourOption(){
         startTimerOut();
         state = State.OPTION;
+        System.out.println("Retour Etat Option");
     }
     
     private void updateStructure(){
+         System.out.println("Update action");;
         if(action instanceof Creation){
+            System.out.println("Update action est une instance de CreATION");
             if(this.position != null){
-                ((Creation)action).setPosition((Point2D) this.position);                
+                System.out.println("Update : X="+(int)position.getX()+" Y="+ (int)position.getY());
+                ((Creation)action).setPosition((Point) this.position);                
             }
             if(this.couleur != null){
                 ((Creation)action).setCouleur(this.couleur.toString());
@@ -370,9 +390,10 @@ public class Automate {
     }
             
 
-    private void getColor(Point2D p){
+    private void getColor(Point p){
         try {
-            busIvy.bindMsg("Palette:ResultatTesterPoint x="+ p.getX() +" y="+ p.getY()+" nom=(.*)", (client, args) -> {
+            System.out.println("GETCOLOR");
+            busIvy.bindMsg("Palette:ResultatTesterPoint x="+ (int)p.getX() +" y="+ (int)p.getY()+" nom=(.*)", (client, args) -> {
                
                 try {
                     
@@ -382,6 +403,7 @@ public class Automate {
                             switch(args1[4]){
                                 case "green":
                                     this.couleur = Couleur.GREEN;
+                                    
                                     break;
                                 case "blue":
                                     this.couleur = Couleur.BLUE;
